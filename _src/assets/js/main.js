@@ -258,7 +258,7 @@ const ObjToken = function(){
 
     this.newToken = function () {
         this.type = Math.floor(Math.random()*7);
-        this.y = 5;
+        this.y = 0;
         this.x = 4;
     };
 
@@ -267,9 +267,40 @@ const ObjToken = function(){
             this.frame++;
         }
         else{
-            this.y++;
+            if(this.crash(this.angle, this.y+1, this.x)===false){
+                this.y++;
+            }
+            else{
+                this.fix();
+                this.newToken();
+            }
             this.frame = 0;
         }
+    };
+
+    this.fix = function () {
+        for(let py=0; py<4; py++){
+            for(let px=0; px<4;px++){
+                if(tokenGraphic[this.type][this.angle][py][px]>0){
+                    screen[this.y+py][this.x+px] = tokenGraphic[this.type][this.angle][py][px];
+                }
+            }
+        }
+
+    };
+    this.crash = function(newAngle,newY,newX){
+        let result = false;
+
+        for(let py=0; py<4; py++){
+            for(let px=0; px<4; px++){
+                if(tokenGraphic[this.type][newAngle][py][px]>0){
+                    if(screen[newY+py][newX+px]>0){
+                        result = true;
+                    }
+                }
+            }
+        }
+        return result;
     };
 
     this.draw =function(){
@@ -305,11 +336,16 @@ const ObjToken = function(){
     };
 
     this.rotate = function () {
-        if(this.angle < 3){
-            this.angle++;
+        let newAngle = this.angle;
+
+        if(newAngle < 3){
+            newAngle++;
         }
         else{
-            this.angle = 0;
+            newAngle = 0;
+        }
+        if(this.crash(newAngle,this.y,this.x)===false){
+            this.angle = newAngle;
         }
         console.log('Rotar');
     };
@@ -317,16 +353,22 @@ const ObjToken = function(){
 
 
     this.down = function(){
-        this.y++;
-        console.log('abajo');
+        if(this.crash(this.angle, this.y+1, this.x)=== false){
+            this.y++;
+            console.log('abajo');
+        }
     };
     this.right = function(){
-        this.x++;
-        console.log('derecha');
+        if(this.crash(this.angle, this.y, this.x+1)=== false){
+            this.x++;
+            console.log('derecha');
+        }
     };
     this.left = function(){
-        this.x--;
-        console.log('izquierda');
+        if(this.crash(this.angle, this.y, this.x-1)=== false){
+            this.x--;
+            console.log('izquierda');
+        }
     };
 
     this.newToken();
