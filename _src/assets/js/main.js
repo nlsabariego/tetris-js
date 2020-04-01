@@ -8,7 +8,9 @@ const widthCanvas = 400;
 const heightCanvas = 640;
 
 const widthScreen = 10;
-const heightScreen = 16;
+const heightScreen = 20;
+
+const marginSup = 4;
 
 const widthT = 40;
 const heightT = 40;
@@ -30,8 +32,22 @@ const screen = [
     [1,0,0,0,0,0,0,0,0,0,0,1],
     [1,0,0,0,0,0,0,0,0,0,0,1],
     [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
     [1,1,1,1,1,1,1,1,1,1,1,1]
 ];
+
+//colores piezas
+
+const red = '#f21818';
+const orange ='#ff6200';
+const yellow ='#ffcf0f';
+const green = '#99d100';
+const blue ='#03ffff';
+const cyan = '#0320ff';
+const purple = '#9700b5';
 
 const tokenGraphic = [
     //cuadrado
@@ -238,10 +254,29 @@ const ObjToken = function(){
     this.draw =function(){
         for(let py = 0; py < 4; py++){
             for(let px = 0; px < 4; px++){
-
-
                 if(tokenGraphic[this.type][this.angle][py][px] !== 0){
-                    ctx.fillStyle = '#777777';
+                    if(tokenGraphic[this.type][this.angle][py][px] === 1){
+                        ctx.fillStyle = red;
+                    }
+                    if(tokenGraphic[this.type][this.angle][py][px] === 2){
+                        ctx.fillStyle = blue;
+                    }
+                    if(tokenGraphic[this.type][this.angle][py][px] === 3){
+                        ctx.fillStyle = yellow;
+                    }
+                    if(tokenGraphic[this.type][this.angle][py][px] === 4){
+                        ctx.fillStyle = green;
+                    }
+                    if(tokenGraphic[this.type][this.angle][py][px] === 5){
+                        ctx.fillStyle = orange;
+                    }
+                    if(tokenGraphic[this.type][this.angle][py][px] === 6){
+                        ctx.fillStyle = cyan;
+                    }
+                    if(tokenGraphic[this.type][this.angle][py][px] === 7){
+                        ctx.fillStyle = purple;
+                    }
+
                     ctx.fillRect((this.x + px) * widthT, (this.y + py) * heightT, widthT, heightT);
                 }
             }
@@ -262,6 +297,39 @@ const ObjToken = function(){
         console.log('izquierda');
     };
 };
+
+//FUNCION PARA PINTAR LA PANTALLA
+function drawScreen() {
+    for(let py = marginSup; py < heightScreen ; py++){
+        for(let px = 1; px < widthScreen; px++){
+            if(screen[py][px] !== 0){
+                if(screen[py][px] === 1){
+                    ctx.fillStyle = red;
+                }
+                if(screen[py][px] === 2){
+                    ctx.fillStyle = blue;
+                }
+                if(screen[py][px] === 3){
+                    ctx.fillStyle = yellow;
+                }
+                if(screen[py][px] === 4){
+                    ctx.fillStyle = green;
+                }
+                if(screen[py][px] === 5){
+                    ctx.fillStyle = orange;
+                }
+                if(screen[py][px] === 6){
+                    ctx.fillStyle = cyan;
+                }
+                if(screen[py][px] === 7){
+                    ctx.fillStyle = purple;
+                }
+
+                ctx.fillRect((px-1) * widthT, (py-marginSup) * heightT, widthT, heightT);
+            }
+        }
+    }
+}
 
 function keyboardInit() {
     document.addEventListener('keydown', function (key) {
@@ -305,6 +373,7 @@ function deleteCanvas() {
 
 function master() {
     deleteCanvas();
+    drawScreen();
     token.draw();
 
 }
