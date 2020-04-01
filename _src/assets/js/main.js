@@ -245,11 +245,32 @@ const tokenGraphic = [
 let token;
 
 const ObjToken = function(){
-    this.x = 5;
-    this.y = 7;
+    this.x = 1;
+    this.y = 1;
 
     this.angle = 0;
-    this.type = 1;
+    this.type = 0;
+
+    this.delay = 50;
+    this.frame = 0;
+
+    //METODOS
+
+    this.newToken = function () {
+        this.type = Math.floor(Math.random()*7);
+        this.y = 5;
+        this.x = 4;
+    };
+
+    this.fall = function(){
+        if(this.frame < this.delay){
+            this.frame++;
+        }
+        else{
+            this.y++;
+            this.frame = 0;
+        }
+    };
 
     this.draw =function(){
         for(let py = 0; py < 4; py++){
@@ -277,25 +298,38 @@ const ObjToken = function(){
                         ctx.fillStyle = purple;
                     }
 
-                    ctx.fillRect((this.x + px) * widthT, (this.y + py) * heightT, widthT, heightT);
+                    ctx.fillRect((this.x + px - 1) * widthT, (this.y + py - marginSup) * heightT, widthT, heightT);
                 }
             }
         }
     };
 
-    //METODOS
-    this.rotate = function(){
+    this.rotate = function () {
+        if(this.angle < 3){
+            this.angle++;
+        }
+        else{
+            this.angle = 0;
+        }
         console.log('Rotar');
     };
+
+
+
     this.down = function(){
+        this.y++;
         console.log('abajo');
     };
     this.right = function(){
+        this.x++;
         console.log('derecha');
     };
     this.left = function(){
+        this.x--;
         console.log('izquierda');
     };
+
+    this.newToken();
 };
 
 //FUNCION PARA PINTAR LA PANTALLA
@@ -374,6 +408,7 @@ function deleteCanvas() {
 function master() {
     deleteCanvas();
     drawScreen();
+    token.fall();
     token.draw();
 
 }
