@@ -39,6 +39,30 @@ const screen = [
     [1,1,1,1,1,1,1,1,1,1,1,1]
 ];
 
+const screenCopy = [
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1]
+];
+
 //colores piezas
 
 const red = '#f21818';
@@ -242,6 +266,14 @@ const tokenGraphic = [
 
 ];
 
+function resetScreen() {
+    for(let py=0; py<21; py++){
+        for(let px=0; px<12; px++){
+            screen[py][px]=screenCopy[py][px];
+        }
+    }
+}
+
 let token;
 
 const ObjToken = function(){
@@ -262,6 +294,35 @@ const ObjToken = function(){
         this.x = 4;
     };
 
+    this.checkForLoss = function () {
+        let lose = false;
+        for(let px=1; px<widthScreen+1; px++){
+            if(screen[2][px] > 0){
+                lose = true;
+            }
+        }
+        return lose;
+    };
+
+    this.clean = function () {
+        let fullLine;
+        for(let py=marginSup; py<heightScreen; py++){
+            fullLine = true;
+
+            for(let px=1; px<widthScreen+1; px++){
+                if(screen[py][px]===0){
+                    fullLine = false;
+                }
+            }
+
+            if(fullLine===true){
+                for(let px=1; px<widthScreen+1; px++){
+                    screen[py][px] = 0;
+                }
+            }
+        }
+    };
+
     this.fall = function(){
         if(this.frame < this.delay){
             this.frame++;
@@ -272,7 +333,12 @@ const ObjToken = function(){
             }
             else{
                 this.fix();
+                this.clean();
                 this.newToken();
+
+                if(this.checkForLoss() === true){
+                    resetScreen();
+                }
             }
             this.frame = 0;
         }
@@ -377,7 +443,7 @@ const ObjToken = function(){
 //FUNCION PARA PINTAR LA PANTALLA
 function drawScreen() {
     for(let py = marginSup; py < heightScreen ; py++){
-        for(let px = 1; px < widthScreen; px++){
+        for(let px = 1; px < widthScreen+1; px++){
             if(screen[py][px] !== 0){
                 if(screen[py][px] === 1){
                     ctx.fillStyle = red;
